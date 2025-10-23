@@ -1,0 +1,28 @@
+[package]
+name = "gt6n_er"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pandemist_vehicle_elements = { path = "../pandemist_vehicle_elements" }
+time = "0.3"
+typedmap = "0.6.0"
+lotus-script = { git = "https://github.com/Oriolus-Software/LOTUS-Scripting", branch = "master", features = [
+	"time",
+] }
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = 3
+lto = true
+debug = false
+panic = "abort"
+strip = true
+codegen-units = 1
+
+[profile.dev]
+opt-level = 1
