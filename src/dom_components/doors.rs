@@ -1,3 +1,7 @@
+use lotus_extra::messages::{
+    std::{DoorControlTarget, DoorSide},
+    std_helper::DoorStateSender,
+};
 use lotus_script::{
     prelude::{Message, MessageTarget},
     time::delta,
@@ -28,7 +32,6 @@ use pandemist_vehicle_elements::{
             DiagnosticDoorStateSender, DiagnosticFaultKind, DiagnosticMessageSender,
         },
         gt6n_coupling_messages::{CouplerDoorControl, CouplerDoorsClosed},
-        std_messages::{DoorControlTarget, DoorSide, DoorStateSender},
     },
 };
 

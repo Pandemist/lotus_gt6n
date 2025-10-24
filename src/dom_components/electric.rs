@@ -1,3 +1,4 @@
+use lotus_extra::messages::std_helper::BatteryvoltageSender;
 use lotus_script::prelude::Message;
 use pandemist_vehicle_elements::{
     api::{
@@ -31,7 +32,6 @@ use pandemist_vehicle_elements::{
         diagnostic_messages::{
             DiagnosticFaultKind, DiagnosticMessageSender, DiagnosticPantoStateSender,
         },
-        std_messages::BatteryvoltageSender,
         {coupling_handler::UniversalCouplingLine, gt6n_coupling_messages::CouplerPowerlinePower},
     },
 };

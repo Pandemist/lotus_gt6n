@@ -1,3 +1,4 @@
+use lotus_extra::messages::std_helper::send_veh_number;
 use lotus_script::time::game_time;
 use lotus_script::{content::ContentId, rand::gen_u64};
 use pandemist_vehicle_elements::api::key_event::KeyEventCab;
@@ -8,7 +9,6 @@ use pandemist_vehicle_elements::elements::std::helper::{enhance_string, get_rand
 use pandemist_vehicle_elements::elements::tech::switches::Switch;
 use pandemist_vehicle_elements::management::communicator::Com;
 use pandemist_vehicle_elements::messages::pandemist_messages::send_gpm_state;
-use pandemist_vehicle_elements::messages::std_messages::send_veh_number;
 use time::{Date, PrimitiveDateTime, Time};
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++

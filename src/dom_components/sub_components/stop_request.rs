@@ -1,3 +1,4 @@
+use lotus_extra::messages::std_helper::StopRequestSender;
 use lotus_script::prelude::Message;
 use pandemist_vehicle_elements::{
     api::{key_event::KeyEventCab, light::Light},
@@ -15,7 +16,6 @@ use pandemist_vehicle_elements::{
     messages::{
         coupling_handler::UniversalCouplingLine,
         gt6n_coupling_messages::{CouplerBuggyReqest, CouplerBuggyReset, CouplerStopRequest},
-        std_messages::StopRequestSender,
     },
 };
 

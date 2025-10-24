@@ -1,3 +1,4 @@
+use lotus_extra::messages::std_helper::LightSender;
 use lotus_script::{prelude::Message, time::delta};
 use pandemist_vehicle_elements::{
     api::{
@@ -22,7 +23,6 @@ use pandemist_vehicle_elements::{
         coupling_handler::UniversalCouplingLine,
         diagnostic_messages::{DiagnosticFaultKind, DiagnosticMessageSender},
         gt6n_coupling_messages::{CouplerIndicator, CouplerInteriorLight, Indicator},
-        std_messages::LightSender,
     },
 };
 

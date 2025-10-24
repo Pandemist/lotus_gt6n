@@ -1,5 +1,9 @@
 use std::collections::HashMap;
 
+use lotus_extra::messages::{
+    std::PowerSignalCabin,
+    std_helper::{PowerSignalSender, VelocitySender},
+};
 use lotus_script::{
     prelude::{Message, MessageTarget},
     time::delta,
@@ -36,7 +40,6 @@ use pandemist_vehicle_elements::{
         gt6n_coupling_messages::{
             CouplerCarActiv, CouplerReverser, CouplerThrottle, CouplerThrottleRear,
         },
-        std_messages::{PowerSignalCabin, PowerSignalSender, VelocitySender},
     },
 };
 

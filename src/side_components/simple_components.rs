@@ -1,3 +1,4 @@
+use lotus_extra::messages::pis::RoutingDirection;
 use lotus_script::{
     prelude::{send_message, Message, MessageTarget},
     time::delta,
@@ -20,10 +21,7 @@ use pandemist_vehicle_elements::{
         communicator::Com,
         enums::{general_enums::CabActivState, state_enums::ChangedState},
     },
-    messages::{
-        diagnostic_messages::{DiagnosticFaultKind, DiagnosticMessageSender},
-        fis_messages::RoutingDirection,
-    },
+    messages::diagnostic_messages::{DiagnosticFaultKind, DiagnosticMessageSender},
 };
 
 use crate::general::{
