@@ -1,11 +1,19 @@
 ## GT6N_ER
 
-Script for the GT6N ( reworked) by Pandemist for the LOTUS simulator.
+Script for the GT6N (reworked) by Pandemist for the LOTUS simulator.
 
 ## About the project
 
 - Current development version of the GT6N script for the revised GT6N by Pandemist (WIP)
 - Serves as a showcase for a classic programming style for vehicle scripts.
+
+## Features
+
+- Functionality of (almost) all components (switches, buttons, moving elements, lights, sounds, etc.)
+- More complex logic (door control, traction control, vehicle electrics, multiple train control, lift/folding ramp, etc.)
+- Implementation of all previously presented script standards (standard messages, train bus, etc.)
+- MMS interface
+
 
 ## Requirements
 
