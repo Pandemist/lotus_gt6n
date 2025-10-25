@@ -1,6 +1,7 @@
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::{prelude::Message, time::delta};
 use pandemist_vehicle_elements::{
-    api::{key_event::KeyEventCab, light::Light, sound::Sound},
+    api::{light::Light, sound::Sound},
     components::gt6n::intercom::IntercomGt6n,
     elements::tech::{
         buttons::PushButton,
@@ -67,17 +68,17 @@ impl IntercomsEmBrake {
                 "AV_A_Btn_Notbremse",
                 "AV_A_Btn_Notbremse_Rot",
                 "Notbremse",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .build(),
             b_btn_emergency_shut_off: PushButton::builder_rotate_on_release_toggle(
                 "AV_B_Btn_Notbremse",
                 "AV_B_Btn_Notbremse_Rot",
                 "Notbremse",
-                Some(KeyEventCab::BCab),
+                Some(CockpitSide::B),
             )
             .build(),
-            a_sw_intercom: StepSwitch::builder("AV_A_Sw_Sprechstelle", Some(KeyEventCab::ACab))
+            a_sw_intercom: StepSwitch::builder("AV_A_Sw_Sprechstelle", Some(CockpitSide::A))
                 .event("Sprechstelle_Plus", SwitchEventAction::Plus)
                 .event("Sprechstelle_Minus", SwitchEventAction::Minus)
                 .snd_default_plus("Snd_A_Switch")
@@ -88,10 +89,10 @@ impl IntercomsEmBrake {
                 .max_spring()
                 .build(),
             a_sw_bypass_switch_em_brake_seal: SealedSwitch::new(
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
                 "vis_A_Plombe_Hilfsschalter_FG_Notbremse",
                 "Plombe_Hilfsschalter_FG_Notbremse",
-                Switch::builder("AV_A_Sw_Hilfsschalter_Notbremse", Some(KeyEventCab::ACab))
+                Switch::builder("AV_A_Sw_Hilfsschalter_Notbremse", Some(CockpitSide::A))
                     .event_toggle("Hilfsschalter_FG_Notbremse")
                     .snd_toggle("Snd_A_Switch")
                     .build(),

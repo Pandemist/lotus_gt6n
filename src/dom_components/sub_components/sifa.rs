@@ -1,8 +1,7 @@
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::time::delta;
 use pandemist_vehicle_elements::{
-    api::{
-        key_event::KeyEventCab, light::Light, simulation_settings::deadmans_switch, sound::Sound,
-    },
+    api::{light::Light, simulation_settings::deadmans_switch, sound::Sound},
     elements::tech::{buttons::PushButton, seals::SealedSwitch, switches::Switch},
     management::{communicator::Com, enums::general_enums::CabActivState},
     messages::diagnostic_messages::{DiagnosticFaultKind, DiagnosticMessageSender},
@@ -42,13 +41,13 @@ impl Sifa {
             a_pedal_sifa: PushButton::builder(
                 "AV_A_Pedal_Sifa",
                 "Pedal_Sifa",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .build(),
             a_btn_throttle_lever_sifa: PushButton::builder(
                 "AV_A_Sollwertgeber_Sifa",
                 "HoldToRun",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_Sollwertgeber_SiFa_Dn")
             .snd_release("Snd_A_Sollwertgeber_SiFa_Up")
@@ -57,17 +56,17 @@ impl Sifa {
             a_btn_sifa_reset: PushButton::builder(
                 "AV_A_Btn_SiFa_Reset",
                 "HoldToRun_Btn",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
             .build(),
 
             a_sw_bypass_switch_sifa_seal: SealedSwitch::new(
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
                 "vis_A_Plombe_Hilfsschalter_Sifa",
                 "Plombe_Hilfsschalter_Sifa",
-                Switch::builder("AV_A_Sw_Hilfsschalter_Sifa", Some(KeyEventCab::ACab))
+                Switch::builder("AV_A_Sw_Hilfsschalter_Sifa", Some(CockpitSide::A))
                     .event_toggle("Hilfsschalter_Sifa")
                     .snd_toggle("Snd_A_Switch")
                     .build(),

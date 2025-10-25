@@ -1,5 +1,6 @@
+use lotus_extra::vehicle::CockpitSide;
 use pandemist_vehicle_elements::{
-    api::{key_event::KeyEventCab, light::Light},
+    api::light::Light,
     components::gt6n::{foldingramp::Foldingramp, lift::Hublift},
     elements::tech::{
         buttons::PushButton,
@@ -79,7 +80,7 @@ pub struct WheelchairRampGt6n {
 impl WheelchairRampGt6n {
     fn new() -> Self {
         Self {
-            rampe: Foldingramp::new("", KeyEventCab::ACab),
+            rampe: Foldingramp::new("", CockpitSide::A),
         }
     }
 
@@ -114,10 +115,10 @@ impl WheelchairLiftGt6n {
     fn new() -> Self {
         Self {
             mms_fault_sender: DiagnosticMessageSender::default(),
-            lift: Hublift::new(KeyEventCab::ACab),
+            lift: Hublift::new(CockpitSide::A),
             sw_lift_up_down: StepSwitch::builder(
                 "AV_A_Sw_Hublift_HebenSenken",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event("Hublift_Heben", SwitchEventAction::Plus)
             .event("Hublift_Senken", SwitchEventAction::Minus)
@@ -132,7 +133,7 @@ impl WheelchairLiftGt6n {
             .build(),
             sw_lift_level_target: StepSwitch::builder(
                 "AV_A_Sw_Hublift_Hoehenvorgabe",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event("Hublift_Bahnsteig", SwitchEventAction::Plus)
             .event("Hublift_Strasse", SwitchEventAction::Minus)
@@ -145,7 +146,7 @@ impl WheelchairLiftGt6n {
             btn_lift_emergency_off: PushButton::builder(
                 "AV_A_Btn_Hublift_Notablage",
                 "Hublift_Notablegen",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -208,7 +209,7 @@ impl WheelchairLiftGt6n {
         self.mms_fault_sender.send(
             DiagnosticFaultKind::HubliftDefektA,
             !(fuse_power && fuse_control && sicherung_kompressor),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
     }
 

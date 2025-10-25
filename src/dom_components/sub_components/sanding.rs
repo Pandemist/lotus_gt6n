@@ -1,8 +1,9 @@
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::{prelude::Message, time::delta};
 use pandemist_vehicle_elements::{
     api::{
-        animation::Animation, axis::ApiRailAxis, key_event::KeyEventCab,
-        sound::SoundWithStartAndEnd, visible_flag::Visiblility,
+        animation::Animation, axis::ApiRailAxis, sound::SoundWithStartAndEnd,
+        visible_flag::Visiblility,
     },
     elements::{std::delay::Delay, tech::buttons::PushButton},
     management::{
@@ -60,14 +61,10 @@ impl Sanding {
 
             delay: Delay::new(1.0, false),
 
-            a_btn_sanding: PushButton::builder(
-                "AV_A_Btn_Sanden",
-                "Sanding",
-                Some(KeyEventCab::ACab),
-            )
-            .snd_press("Snd_A_BtnDn")
-            .snd_release("Snd_A_BtnUp")
-            .build(),
+            a_btn_sanding: PushButton::builder("AV_A_Btn_Sanden", "Sanding", Some(CockpitSide::A))
+                .snd_press("Snd_A_BtnDn")
+                .snd_release("Snd_A_BtnUp")
+                .build(),
 
             snd_sanding: SoundWithStartAndEnd::new(
                 "Snd_Sand_Start",

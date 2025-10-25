@@ -1,8 +1,9 @@
 use std::rc::Rc;
 
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::{prelude::Message, time::delta};
 use pandemist_vehicle_elements::{
-    api::{key_event::KeyEventCab, light::Light, sound::Sound},
+    api::{light::Light, sound::Sound},
     components::traction::railbrakes::Railbrakes,
     elements::tech::buttons::PushButton,
     management::{communicator::Com, enums::general_enums::TrainFormationSwitch},
@@ -72,7 +73,7 @@ impl Railbrake {
             a_btn_railbrake: PushButton::builder(
                 "AV_A_Btn_Schienenbremse",
                 "RailBrake",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")

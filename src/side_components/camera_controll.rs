@@ -1,5 +1,5 @@
+use lotus_extra::vehicle::CockpitSide;
 use pandemist_vehicle_elements::{
-    api::key_event::KeyEventCab,
     components::gt6n::videosystem::VideoSystemGt6n,
     elements::tech::{
         buttons::PushButton,
@@ -24,7 +24,7 @@ impl CameraControll {
         Self {
             a_sw_brightness: StepSwitch::builder(
                 "AV_A_Sw_Videomonitor_Helligkeit",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event("Videomonitor_Helligkeit_Plus", SwitchEventAction::Plus)
             .event("Videomonitor_Helligkeit_Minus", SwitchEventAction::Minus)
@@ -35,7 +35,7 @@ impl CameraControll {
             .min_spring()
             .max_spring()
             .build(),
-            a_sw_recording: StepSwitch::builder("AV_A_Sw_Video_DS_AS", Some(KeyEventCab::ACab))
+            a_sw_recording: StepSwitch::builder("AV_A_Sw_Video_DS_AS", Some(CockpitSide::A))
                 .event("Videomonitor_DS_AS_Plus", SwitchEventAction::Plus)
                 .event("Videomonitor_DS_AS_Minus", SwitchEventAction::Minus)
                 .snd_default_plus("Snd_A_Switch")
@@ -45,11 +45,11 @@ impl CameraControll {
                 .min_spring()
                 .max_spring()
                 .build(),
-            a_btn_cam_1: PushButton::builder("AV_A_Btn_1", "Btn_1", Some(KeyEventCab::ACab))
+            a_btn_cam_1: PushButton::builder("AV_A_Btn_1", "Btn_1", Some(CockpitSide::A))
                 .snd_press("Snd_A_BtnDn")
                 .snd_release("Snd_A_BtnUp")
                 .build(),
-            a_btn_cam_2: PushButton::builder("AV_A_Btn_2", "Btn_2", Some(KeyEventCab::ACab))
+            a_btn_cam_2: PushButton::builder("AV_A_Btn_2", "Btn_2", Some(CockpitSide::A))
                 .snd_press("Snd_A_BtnDn")
                 .snd_release("Snd_A_BtnUp")
                 .build(),

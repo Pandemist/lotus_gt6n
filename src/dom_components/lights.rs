@@ -1,8 +1,8 @@
-use lotus_extra::messages::std_helper::LightSender;
+use lotus_extra::{messages::std::LightSender, vehicle::CockpitSide};
 use lotus_script::{prelude::Message, time::delta};
 use pandemist_vehicle_elements::{
     api::{
-        key_event::{KeyEvent, KeyEventCab},
+        key_event::KeyEvent,
         light::{Light, SimpleBlinker},
         sound::Sound,
     },
@@ -127,14 +127,14 @@ impl Lights {
             a_btn_light_test: PushButton::builder(
                 "AV_A_Btn_Lampentest",
                 "Lampentest",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
             .build(),
             a_lm_light_test: Light::new(Some("LM_A_Lampentest")),
 
-            a_sw_dimmer: StepSwitch::builder("AV_A_Sw_Dimmer", Some(KeyEventCab::ACab))
+            a_sw_dimmer: StepSwitch::builder("AV_A_Sw_Dimmer", Some(CockpitSide::A))
                 .event("Dimmer_Plus", SwitchEventAction::Plus)
                 .event("Dimmer_Minus", SwitchEventAction::Minus)
                 .snd_default_plus("Snd_A_Switch")
@@ -150,7 +150,7 @@ impl Lights {
             // Aussenlicht
             a_sw_exterior_lights: StepSwitch::builder(
                 "AV_A_Sw_Aussenbeleuchtung",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event("FrontLightPlus", SwitchEventAction::Plus)
             .event("FrontLightMinus", SwitchEventAction::Minus)
@@ -180,7 +180,7 @@ impl Lights {
             // Blinker
             indicator_coupling: UniversalCouplingLine::new(CouplerIndicator {}, (true, true)),
 
-            a_sw_indicator: StepSwitch::builder("AV_A_Sw_Blinker", Some(KeyEventCab::ACab))
+            a_sw_indicator: StepSwitch::builder("AV_A_Sw_Blinker", Some(CockpitSide::A))
                 .event("IndicatorOff", SwitchEventAction::Set(0))
                 .event("IndicatorToRight", SwitchEventAction::Plus)
                 .event("IndicatorToLeft", SwitchEventAction::Minus)
@@ -195,13 +195,13 @@ impl Lights {
             a_btn_warnindicator: PushButton::builder_hold_mode(
                 "AV_A_Btn_Warnblinker",
                 "IndicatorWarn",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
             .build(),
 
-            b_sw_indicator: StepSwitch::builder("AV_B_Sw_Blinker", Some(KeyEventCab::BCab))
+            b_sw_indicator: StepSwitch::builder("AV_B_Sw_Blinker", Some(CockpitSide::B))
                 .event("IndicatorOff", SwitchEventAction::Set(0))
                 .event("IndicatorToRight", SwitchEventAction::Plus)
                 .event("IndicatorToLeft", SwitchEventAction::Minus)
@@ -235,7 +235,7 @@ impl Lights {
             // Fahrerraumlicht
             a_sw_driver_cab_light: StepSwitch::builder(
                 "AV_A_Sw_Fahrerraumlicht",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event("CockpitLightPlus", SwitchEventAction::Plus)
             .event("CockpitLightMinus", SwitchEventAction::Minus)
@@ -245,7 +245,7 @@ impl Lights {
             .build(),
             a_driver_cab_light_override: KeyEvent::new(
                 Some("CockpitLightToggle"),
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             ),
 
             a_tacho_light_off_timer: 0.0,
@@ -258,17 +258,14 @@ impl Lights {
             // Interiorlight
             interior_light_coupling: UniversalCouplingLine::new(CouplerInteriorLight, (true, true)),
 
-            a_sw_interior_light: Switch::builder(
-                "AV_A_Sw_Innenbeleuchtung",
-                Some(KeyEventCab::ACab),
-            )
-            .event_toggle("CabinLightToggle")
-            .event_plus("CabinLightPlus")
-            .event_minus("CabinLightMinus")
-            .snd_toggle("Snd_A_Switch")
-            .snd_plus("Snd_A_Switch")
-            .snd_minus("Snd_A_Switch")
-            .build(),
+            a_sw_interior_light: Switch::builder("AV_A_Sw_Innenbeleuchtung", Some(CockpitSide::A))
+                .event_toggle("CabinLightToggle")
+                .event_plus("CabinLightPlus")
+                .event_minus("CabinLightMinus")
+                .snd_toggle("Snd_A_Switch")
+                .snd_plus("Snd_A_Switch")
+                .snd_minus("Snd_A_Switch")
+                .build(),
 
             a_key_emergency_light_1: KeySwitch::builder(
                 driver_key.clone(),
@@ -366,19 +363,19 @@ impl Lights {
         self.mms_fault_sender.send(
             DiagnosticFaultKind::AussenbeleuchtungAeinschalten,
             cab_a_activ && innenlicht && self.a_sw_exterior_lights.value(true) <= 1,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::AussenbeleuchtungAusgefallen,
             !(com.fuse.is_on("NahFernlicht") && com.fuse.is_on("Beleuchtungssteuerung")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::AusfallBremslichtA,
             !(com.fuse.is_on("Begrenzungslicht")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(

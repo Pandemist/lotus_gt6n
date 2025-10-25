@@ -1,11 +1,12 @@
-use lotus_extra::messages::std_helper::send_veh_number;
+use lotus_extra::messages::std::VehNumber;
+use lotus_extra::rand::get_random_element;
+use lotus_extra::scenery::get_horizontal_ad;
+use lotus_extra::strings::enhance_string;
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::time::game_time;
 use lotus_script::{content::ContentId, rand::gen_u64};
-use pandemist_vehicle_elements::api::key_event::KeyEventCab;
 use pandemist_vehicle_elements::api::variable::{get_var, set_var};
 use pandemist_vehicle_elements::api::vehicle_infos::{set_veh_number, veh_number};
-use pandemist_vehicle_elements::elements::std::ad_ids::get_horizontal_ad;
-use pandemist_vehicle_elements::elements::std::helper::{enhance_string, get_random_element};
 use pandemist_vehicle_elements::elements::tech::switches::Switch;
 use pandemist_vehicle_elements::management::communicator::Com;
 use pandemist_vehicle_elements::messages::pandemist_messages::send_gpm_state;
@@ -48,7 +49,9 @@ pub fn determ_veh_number() {
         veh_number = enhance_string(new_veh_number.to_string(), 4, '0');
         set_veh_number(veh_number.clone());
     }
-    send_veh_number(veh_number.clone());
+    VehNumber::send(&VehNumber {
+        value: veh_number.into(),
+    });
 }
 
 pub fn textures() {
@@ -140,7 +143,7 @@ pub fn textures() {
 pub fn set_fuse(com: &mut Com) {
     com.fuse.register(
         "NotbremseLoesen",
-        Switch::builder("AV_A_Kss_Notbremse_Loesen", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Notbremse_Loesen", Some(CockpitSide::A))
             .event_toggle("Kss_Notbremse_loesen")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -149,7 +152,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Schienenbremsschuetz",
-        Switch::builder("AV_A_Kss_Schienenbremsschuetz", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Schienenbremsschuetz", Some(CockpitSide::A))
             .event_toggle("Kss_Schienenbremsschuetz")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -158,7 +161,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Stromabnehmerantrieb",
-        Switch::builder("AV_A_Kss_Stromabnehmerantrieb", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Stromabnehmerantrieb", Some(CockpitSide::A))
             .event_toggle("Kss_Stromabnehmerantrieb")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -167,7 +170,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Hauptschalterantrieb1",
-        Switch::builder("AV_A_Kss_Hauptschalter_Antrieb_1", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Hauptschalter_Antrieb_1", Some(CockpitSide::A))
             .event_toggle("Kss_Hauptschalterantrieb_1")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -176,7 +179,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Hauptschalterantrieb2",
-        Switch::builder("AV_A_Kss_Hauptschalter_Antrieb_2", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Hauptschalter_Antrieb_2", Some(CockpitSide::A))
             .event_toggle("Kss_Hauptschalterantrieb_2")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -185,7 +188,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "IKEELAversorgung",
-        Switch::builder("AV_A_Kss_IKE_ELA_Versorgung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_IKE_ELA_Versorgung", Some(CockpitSide::A))
             .event_toggle("Kss_IKE_ELA_Versorgung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -194,7 +197,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "IKEaufruesten",
-        Switch::builder("AV_A_Kss_IKE_Aufruestungssignal", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_IKE_Aufruestungssignal", Some(CockpitSide::A))
             .event_toggle("Kss_IKE_Aufruestung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -203,7 +206,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "FunkIMUVersorgung",
-        Switch::builder("AV_A_Kss_Funk_IMU_Versorgung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Funk_IMU_Versorgung", Some(CockpitSide::A))
             .event_toggle("Kss_Funk_IMU_Versorgung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -212,7 +215,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Notruf",
-        Switch::builder("AV_A_Kss_Notruf", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Notruf", Some(CockpitSide::A))
             .event_toggle("Kss_Notruf")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -221,7 +224,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "KWRsifaEingangssingal",
-        Switch::builder("AV_A_Kss_KWR_Sifa_Eingangssignal", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_KWR_Sifa_Eingangssignal", Some(CockpitSide::A))
             .event_toggle("Kss_KWR_Sifa_Eingangssignale")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -230,7 +233,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "SPSversorgung",
-        Switch::builder("AV_A_Kss_SPS_Versorgung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_SPS_Versorgung", Some(CockpitSide::A))
             .event_toggle("Kss_SPS_Versorgung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -239,7 +242,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Beleuchtungssteuerung",
-        Switch::builder("AV_A_Kss_Beleuchtungssteuerung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Beleuchtungssteuerung", Some(CockpitSide::A))
             .event_toggle("Kss_Beleuchtungssteuerung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -248,7 +251,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Begrenzungslicht",
-        Switch::builder("AV_A_Kss_Begrenzungslicht", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Begrenzungslicht", Some(CockpitSide::A))
             .event_toggle("Kss_Begrenzungslicht")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -257,7 +260,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "NahFernlicht",
-        Switch::builder("AV_A_Kss_Nah_Fernlicht", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Nah_Fernlicht", Some(CockpitSide::A))
             .event_toggle("Kss_Nah_Fernlicht")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -266,7 +269,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "BlinkerLinks",
-        Switch::builder("AV_A_Kss_Blinkerrelais_Links", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Blinkerrelais_Links", Some(CockpitSide::A))
             .event_toggle("Kss_Blinkerrelais_Links")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -275,7 +278,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "BlinkerRechts",
-        Switch::builder("AV_A_Kss_Blinkerrelais_Rechts", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Blinkerrelais_Rechts", Some(CockpitSide::A))
             .event_toggle("Kss_Blinkerrelais_Rechts")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -284,7 +287,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Sandrohrheizung",
-        Switch::builder("AV_A_Kss_Sandrohrheizung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Sandrohrheizung", Some(CockpitSide::A))
             .event_toggle("Kss_Sandstreuerheizung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -293,7 +296,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Fahrersitz",
-        Switch::builder("AV_A_Kss_Fahrersitz", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Fahrersitz", Some(CockpitSide::A))
             .event_toggle("Kss_Fahrersitz")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -302,7 +305,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Frontscheibenheizung",
-        Switch::builder("AV_A_Kss_Frontscheibenheizung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Frontscheibenheizung", Some(CockpitSide::A))
             .event_toggle("Kss_Frontscheibenheizung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -311,7 +314,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Seitenscheibenheizung",
-        Switch::builder("AV_A_Kss_Seitenscheibenheizung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Seitenscheibenheizung", Some(CockpitSide::A))
             .event_toggle("Kss_Seitenscheibenheizung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -322,7 +325,7 @@ pub fn set_fuse(com: &mut Com) {
         "SeitenscheibenheizungSteuerung",
         Switch::builder(
             "AV_A_Kss_Seitenscheibenheizung_Steuerung",
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         )
         .event_toggle("Kss_Seitenscheibenheizung_Steuerung")
         .snd_plus("Snd_A_Kss_On")
@@ -332,7 +335,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "Spurkranzschmierung",
-        Switch::builder("AV_A_Kss_Spurkranzschmierung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Spurkranzschmierung", Some(CockpitSide::A))
             .event_toggle("Kss_Spurkranzschmierung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -341,7 +344,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "VersorgungTuer1",
-        Switch::builder("AV_A_Kss_Versorgung_Tuer_1", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Versorgung_Tuer_1", Some(CockpitSide::A))
             .event_toggle("Kss_Versorgung_Tuer_1")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -350,7 +353,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "SteuerungTuer1",
-        Switch::builder("AV_A_Kss_Steuerung_Tuer_1", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Steuerung_Tuer_1", Some(CockpitSide::A))
             .event_toggle("Kss_Steuerung_Tuer_1")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -359,7 +362,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "ZentraleTuersteuerung",
-        Switch::builder("AV_A_Kss_Zentrale_Tuersteuerung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Zentrale_Tuersteuerung", Some(CockpitSide::A))
             .event_toggle("Kss_Zentrale_Tuersteuerung")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -368,7 +371,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "HubliftLeistungsteil",
-        Switch::builder("AV_A_Kss_Hublift_Leistungsteil", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Hublift_Leistungsteil", Some(CockpitSide::A))
             .event_toggle("Kss_Hublift_Leistungsteil")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -377,7 +380,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "HubliftSteuersignal",
-        Switch::builder("AV_A_Kss_Hublift_Steuerung", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Hublift_Steuerung", Some(CockpitSide::A))
             .event_toggle("Kss_Hublift_Steuersignal")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -386,7 +389,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "HubliftKompressor",
-        Switch::builder("AV_A_Kss_Hublift_Kompressor", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Hublift_Kompressor", Some(CockpitSide::A))
             .event_toggle("Kss_Hublift_Kompressor")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -395,7 +398,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "HauptschalterTW1",
-        Switch::builder("AV_A_Kss_Hauptschalter_TW1", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Hauptschalter_TW1", Some(CockpitSide::A))
             .event_toggle("Kss_Hauptschalter_TW1")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -404,7 +407,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "HauptschalterTW2",
-        Switch::builder("AV_A_Kss_Hauptschalter_TW2", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Hauptschalter_TW2", Some(CockpitSide::A))
             .event_toggle("Kss_Hauptschalter_TW2")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")
@@ -413,7 +416,7 @@ pub fn set_fuse(com: &mut Com) {
     );
     com.fuse.register(
         "BordnetzumrichterDBU2",
-        Switch::builder("AV_A_Kss_Bordnetzumrichter_UBU_2", Some(KeyEventCab::ACab))
+        Switch::builder("AV_A_Kss_Bordnetzumrichter_UBU_2", Some(CockpitSide::A))
             .event_toggle("Kss_Bordnetzumrichter_UBU_2")
             .snd_plus("Snd_A_Kss_On")
             .snd_minus("Snd_A_Kss_Off")

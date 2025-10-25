@@ -1,8 +1,10 @@
-use lotus_extra::messages::std_helper::BatteryvoltageSender;
+use lotus_extra::{
+    math::PiecewiseLinearFunction, messages::std::BatteryvoltageSender, vehicle::CockpitSide,
+};
 use lotus_script::prelude::Message;
 use pandemist_vehicle_elements::{
     api::{
-        key_event::{KeyEvent, KeyEventCab},
+        key_event::KeyEvent,
         light::Light,
         mock_enums::VehicleInitState,
         simulation_settings::{init_pos_in_train, init_ready_state},
@@ -14,7 +16,7 @@ use pandemist_vehicle_elements::{
         pantograph::ElectricPantograph,
     },
     elements::{
-        std::{piecewise_linear_function::PiecewiseLinearFunction, scroller::Pointer},
+        std::scroller::Pointer,
         tech::{
             key_switch::{KeyDepot, KeySwitch},
             switches::{StepSwitch, SwitchEventAction},
@@ -87,7 +89,7 @@ impl Electric {
         let mainswitch = if const_veh_variant() != FahrzeugVariante::Gt6u {
             UsedMainswitch::Mainswitch {
                 sw_mainswitch: Box::new(
-                    StepSwitch::builder("AV_A_Sw_Hauptschalter", Some(KeyEventCab::ACab))
+                    StepSwitch::builder("AV_A_Sw_Hauptschalter", Some(CockpitSide::A))
                         .event("HighVoltageMainSwitchOn", SwitchEventAction::Plus)
                         .event("HighVoltageMainSwitchOff", SwitchEventAction::Minus)
                         .snd_default_plus("Snd_A_RotBtnOn")
@@ -101,7 +103,7 @@ impl Electric {
 
                 sw_mainswitch_override: KeyEvent::new(
                     Some("HighVoltageMainSwitchToggle"),
-                    Some(KeyEventCab::ACab),
+                    Some(CockpitSide::A),
                 ),
 
                 mainswitch_1: Box::new(
@@ -176,7 +178,7 @@ impl Electric {
             battery_voltage_sender,
 
             no_mainswitch: false,
-            a_sw_pantograph: StepSwitch::builder("AV_A_Sw_Pantograph", Some(KeyEventCab::ACab))
+            a_sw_pantograph: StepSwitch::builder("AV_A_Sw_Pantograph", Some(CockpitSide::A))
                 .event("PantographUp", SwitchEventAction::Plus)
                 .event("PantographDn", SwitchEventAction::Minus)
                 .snd_default_plus("Snd_A_RotBtnOn")
@@ -187,13 +189,13 @@ impl Electric {
                 .max_spring()
                 .build(),
 
-            a_sw_panto_override: KeyEvent::new(Some("PantographToggle"), Some(KeyEventCab::ACab)),
+            a_sw_panto_override: KeyEvent::new(Some("PantographToggle"), Some(CockpitSide::A)),
 
             a_key_battery: KeySwitch::builder(
                 driver_key.clone(),
                 "AV_A_Key_Batterie",
                 "vis_A_Key_Batterie",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_insert("Snd_A_Key_Insert")
             .snd_takeout("Snd_A_Key_Takeout")
@@ -374,13 +376,13 @@ impl Electric {
         self.mms_fault_sender.send(
             DiagnosticFaultKind::HauptschalterA,
             !(com.fuse.is_on("Hauptschalterantrieb1") && com.fuse.is_on("Hauptschalterantrieb2")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::HauptschalterAus,
             self.no_mainswitch && cab_a_activ,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(

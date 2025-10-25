@@ -1,7 +1,7 @@
-use lotus_extra::messages::std_helper::StopRequestSender;
+use lotus_extra::{messages::std::StopRequestSender, vehicle::CockpitSide};
 use lotus_script::prelude::Message;
 use pandemist_vehicle_elements::{
-    api::{key_event::KeyEventCab, light::Light},
+    api::light::Light,
     components::doors::door_buttons::{RedGreenDuoBtn, RedGreenOutBtn, SimpleInBtn},
     elements::tech::buttons::PushButton,
     management::{
@@ -189,7 +189,7 @@ impl StopRequest {
             a_btn_buggy_reset: PushButton::builder(
                 "AV_A_Btn_Kinderwagen_Reset",
                 "Reset_Kinderwagen",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -199,7 +199,7 @@ impl StopRequest {
                     PushButton::builder(
                         "AV_A_Btn_Rollstuhl_Reset",
                         "Reset_Rollstuhl",
-                        Some(KeyEventCab::ACab),
+                        Some(CockpitSide::A),
                     )
                     .snd_press("Snd_A_BtnDn")
                     .snd_release("Snd_A_BtnUp")
@@ -209,7 +209,7 @@ impl StopRequest {
                         0.5,
                         "AV_A_Btn_Rollstuhl_Reset",
                         "Reset_Rollstuhl",
-                        Some(KeyEventCab::ACab),
+                        Some(CockpitSide::A),
                     )
                     .snd_press("Snd_A_BtnDn")
                     .snd_release("Snd_A_BtnUp")

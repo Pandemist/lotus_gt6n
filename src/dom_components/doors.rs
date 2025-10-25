@@ -1,17 +1,13 @@
-use lotus_extra::messages::{
-    std::{DoorControlTarget, DoorSide},
-    std_helper::DoorStateSender,
+use lotus_extra::{
+    messages::std::{DoorControlTarget, DoorSide, DoorStateSender},
+    vehicle::CockpitSide,
 };
 use lotus_script::{
     prelude::{Message, MessageTarget},
     time::delta,
 };
 use pandemist_vehicle_elements::{
-    api::{
-        key_event::{KeyEvent, KeyEventCab},
-        light::Light,
-        sound::Sound,
-    },
+    api::{key_event::KeyEvent, light::Light, sound::Sound},
     components::doors::aeg_electric_door::AegElectricDoor,
     elements::tech::{
         buttons::PushButton,
@@ -263,7 +259,7 @@ impl Doors {
             a_door_control: if const_veh_variant() != FahrzeugVariante::Gt6u {
                 UsedDoorControl::OldControls {
                     sw_door: Box::new(
-                        StepSwitch::builder("AV_A_Sw_Tuersteuerung", Some(KeyEventCab::ACab))
+                        StepSwitch::builder("AV_A_Sw_Tuersteuerung", Some(CockpitSide::A))
                             .event("DoorAllClose", SwitchEventAction::Set(0))
                             .event("DoorAllOpen", SwitchEventAction::Set(2))
                             .event("DoorPlus", SwitchEventAction::Plus)
@@ -277,9 +273,9 @@ impl Doors {
                     ),
                     release_override: KeyEvent::new(
                         Some("DoorReleaseToggle"),
-                        Some(KeyEventCab::ACab),
+                        Some(CockpitSide::A),
                     ),
-                    door1_override: KeyEvent::new(Some("Door1Toggle"), Some(KeyEventCab::ACab)),
+                    door1_override: KeyEvent::new(Some("Door1Toggle"), Some(CockpitSide::A)),
                 }
             } else {
                 UsedDoorControl::NewControls {
@@ -288,7 +284,7 @@ impl Doors {
                         PushButton::builder(
                             "AV_A_Btn_Tuerfreigabe",
                             "DoorReleaseOn",
-                            Some(KeyEventCab::ACab),
+                            Some(CockpitSide::A),
                         )
                         .snd_press("Snd_A_BtnDn")
                         .snd_release("Snd_A_BtnUp")
@@ -298,48 +294,35 @@ impl Doors {
                         PushButton::builder(
                             "AV_A_Btn_Gruenschleife",
                             "DoorReleaseOff",
-                            Some(KeyEventCab::ACab),
+                            Some(CockpitSide::A),
                         )
                         .snd_press("Snd_A_BtnDn")
                         .snd_release("Snd_A_BtnUp")
                         .build(),
                     ),
                     btn_gtu_door1: Box::new(
-                        PushButton::builder(
-                            "AV_A_Sw_Tuer1",
-                            "Door1Toggle",
-                            Some(KeyEventCab::ACab),
-                        )
-                        .snd_press("Snd_A_BtnDn")
-                        .snd_release("Snd_A_BtnUp")
-                        .build(),
+                        PushButton::builder("AV_A_Sw_Tuer1", "Door1Toggle", Some(CockpitSide::A))
+                            .snd_press("Snd_A_BtnDn")
+                            .snd_release("Snd_A_BtnUp")
+                            .build(),
                     ),
                     release_override: KeyEvent::new(
                         Some("DoorReleaseToggle"),
-                        Some(KeyEventCab::ACab),
+                        Some(CockpitSide::A),
                     ),
-                    force_open_override: KeyEvent::new(
-                        Some("DoorAllOpen"),
-                        Some(KeyEventCab::ACab),
-                    ),
-                    force_close_override: KeyEvent::new(
-                        Some("DoorAllClose"),
-                        Some(KeyEventCab::ACab),
-                    ),
+                    force_open_override: KeyEvent::new(Some("DoorAllOpen"), Some(CockpitSide::A)),
+                    force_close_override: KeyEvent::new(Some("DoorAllClose"), Some(CockpitSide::A)),
                 }
             },
 
             a_sw_bypass_switch_doors_closed_seal: SealedSwitch::new(
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
                 "vis_A_Plombe_Hilfsschalter_Gruenschleife",
                 "Plombe_Hilfsschalter_Gruenschleife",
-                Switch::builder(
-                    "AV_A_Sw_Hilfsschalter_Gruenschleife",
-                    Some(KeyEventCab::ACab),
-                )
-                .event_toggle("Hilfsschalter_Gruenschleife")
-                .snd_toggle("Snd_A_Switch")
-                .build(),
+                Switch::builder("AV_A_Sw_Hilfsschalter_Gruenschleife", Some(CockpitSide::A))
+                    .event_toggle("Hilfsschalter_Gruenschleife")
+                    .snd_toggle("Snd_A_Switch")
+                    .build(),
             ),
 
             a_lm_doors_closed: Light::new(Some("LM_A_Gruenschleife")),
@@ -349,7 +332,7 @@ impl Doors {
             b_btn_tuer_4: PushButton::builder(
                 "AV_B_Btn_Tueren_4",
                 "Door1Toggle",
-                Some(KeyEventCab::BCab),
+                Some(CockpitSide::B),
             )
             .snd_press("Snd_B_BtnDn")
             .snd_release("Snd_B_BtnUp")

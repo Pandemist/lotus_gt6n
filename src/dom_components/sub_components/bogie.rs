@@ -1,10 +1,10 @@
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::{
     math::exponential_approach, prelude::Message, time::delta, vehicle::RailQuality,
 };
 use pandemist_vehicle_elements::{
     api::{
         axis::ApiRailAxis,
-        key_event::KeyEventCab,
         light::Light,
         sound::{Sound, SoundTarget},
     },
@@ -96,7 +96,7 @@ impl Bogie {
             a_btn_motor_group_a: PushButton::builder_hold_mode(
                 "AV_A_Btn_motor_group_A",
                 "motor_group_A",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -104,7 +104,7 @@ impl Bogie {
             a_btn_motor_group_c: PushButton::builder_hold_mode(
                 "AV_A_Btn_motor_group_C",
                 "motor_group_C",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -112,7 +112,7 @@ impl Bogie {
             a_btn_motor_group_b: PushButton::builder_hold_mode(
                 "AV_A_Btn_motor_group_B",
                 "motor_group_B",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -271,7 +271,7 @@ impl SpringBrake {
             a_btn_spring_brake: PushButton::builder_hold_mode(
                 "AV_A_Btn_Federspeicher",
                 "Federspeicher",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -281,7 +281,7 @@ impl SpringBrake {
             a_btn_spring_brake_manual_release_a: PushButton::builder_hold_mode(
                 "AV_A_Btn_FspNotloesen_A",
                 "Federspeichernotloesen_A",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -289,7 +289,7 @@ impl SpringBrake {
             a_btn_spring_brake_manual_release_c: PushButton::builder_hold_mode(
                 "AV_A_Btn_FspNotloesen_C",
                 "Federspeichernotloesen_C",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -297,7 +297,7 @@ impl SpringBrake {
             a_btn_spring_brake_manual_release_b: PushButton::builder_hold_mode(
                 "AV_A_Btn_FspNotloesen_B",
                 "Federspeichernotloesen_B",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -420,33 +420,33 @@ impl SpringBrake {
         mms_fault_sender.send(
             DiagnosticFaultKind::FederspeicherAausgruppiert,
             bogie_a.spring_brake.outgrouped,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
         mms_fault_sender.send(
             DiagnosticFaultKind::FederspeicherBausgruppiert,
             bogie_b.spring_brake.outgrouped,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
         mms_fault_sender.send(
             DiagnosticFaultKind::FederspeicherCausgruppiert,
             bogie_c.spring_brake.outgrouped,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         mms_fault_sender.send(
             DiagnosticFaultKind::FederspeicherAgestoert,
             bogie_a.spring_brake.broken,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
         mms_fault_sender.send(
             DiagnosticFaultKind::FederspeicherBgestoert,
             bogie_b.spring_brake.broken,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
         mms_fault_sender.send(
             DiagnosticFaultKind::FederspeicherCgestoert,
             bogie_c.spring_brake.broken,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         fsp_car_offline || fsp_override

@@ -1,6 +1,6 @@
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::{message::Coupling, prelude::Message};
 use pandemist_vehicle_elements::{
-    api::key_event::KeyEventCab,
     components::general::coupler::HandCoupler,
     elements::tech::switches::{StepSwitch, SwitchEventAction},
     management::{
@@ -37,15 +37,15 @@ impl VehicleCoupling {
 
             el_sender: EcouplerSender::default(),
 
-            coupler_0: HandCoupler::new(0, Some(KeyEventCab::ACab), Coupling::Front, 0.3, -0.002),
-            coupler_1: HandCoupler::new(1, Some(KeyEventCab::BCab), Coupling::Rear, 0.3, -0.002),
+            coupler_0: HandCoupler::new(0, Some(CockpitSide::A), Coupling::Front, 0.3, -0.002),
+            coupler_1: HandCoupler::new(1, Some(CockpitSide::B), Coupling::Rear, 0.3, -0.002),
 
             bag_a: gt6n_coupling_messages::BagReader::new(Coupling::Front),
             bag_b: gt6n_coupling_messages::BagReader::new(Coupling::Rear),
 
             a_sw_train_formation_switch: StepSwitch::builder(
                 "AV_A_Sw_Zugbildungsschalter",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event("Zugbildungsschalter_Plus", SwitchEventAction::Plus)
             .event("Zugbildungsschalter_Minus", SwitchEventAction::Minus)
@@ -114,7 +114,7 @@ impl VehicleCoupling {
         self.mms_fault_sender.send(
             DiagnosticFaultKind::ZugbildungsFehlerA,
             zugbildungsfehler,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
     }
 

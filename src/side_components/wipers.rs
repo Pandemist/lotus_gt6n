@@ -1,7 +1,7 @@
 use std::{f32::consts::PI, rc::Rc};
 
+use lotus_extra::vehicle::CockpitSide;
 use pandemist_vehicle_elements::{
-    api::key_event::KeyEventCab,
     components::general::wiper::Wiper,
     elements::tech::switches::{StepSwitch, Switch, SwitchEventAction},
     management::{
@@ -27,7 +27,7 @@ pub struct Wipers {
 impl Wipers {
     pub fn new() -> Self {
         Self {
-            a_sw_wiper: StepSwitch::builder("AV_A_Sw_Scheibenwischer", Some(KeyEventCab::ACab))
+            a_sw_wiper: StepSwitch::builder("AV_A_Sw_Scheibenwischer", Some(CockpitSide::A))
                 .event("WiperPlus", SwitchEventAction::Plus)
                 .event("WiperMinus", SwitchEventAction::Minus)
                 .snd_default_plus("Snd_A_Switch")
@@ -35,13 +35,10 @@ impl Wipers {
                 .min(0)
                 .max(3)
                 .build(),
-            a_sw_wiper_side: Switch::builder(
-                "AV_A_Sw_Scheibenwischer_Seite",
-                Some(KeyEventCab::ACab),
-            )
-            .event_toggle("WiperSide_R")
-            .snd_toggle("Snd_A_Switch")
-            .build(),
+            a_sw_wiper_side: Switch::builder("AV_A_Sw_Scheibenwischer_Seite", Some(CockpitSide::A))
+                .event_toggle("WiperSide_R")
+                .snd_toggle("Snd_A_Switch")
+                .build(),
 
             a_wiper: Wiper::builder("AV_A_Scheibenwischer_1")
                 .main_anim_mapping(Rc::new(|x| {
@@ -63,7 +60,7 @@ impl Wipers {
                 .add_wiper_level(WiperTarget::Normal, 0.5, 0.0, 0)
                 .build(),
 
-            b_sw_wiper: Switch::builder("AV_B_Sw_Scheibenwischer", Some(KeyEventCab::BCab))
+            b_sw_wiper: Switch::builder("AV_B_Sw_Scheibenwischer", Some(CockpitSide::B))
                 .snd_toggle("Snd_B_Switch")
                 .event_toggle("WiperToggle")
                 .event_plus("WiperPlus")

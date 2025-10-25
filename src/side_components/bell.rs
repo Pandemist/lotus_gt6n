@@ -1,5 +1,6 @@
+use lotus_extra::vehicle::CockpitSide;
 use pandemist_vehicle_elements::{
-    api::{key_event::KeyEventCab, sound::SoundWithEnd},
+    api::sound::SoundWithEnd,
     elements::tech::buttons::PushButton,
     management::{communicator::Com, enums::general_enums::CabActivState},
 };
@@ -18,11 +19,11 @@ pub struct Bell {
 impl Bell {
     pub fn new() -> Self {
         Self {
-            a_btn_bell: PushButton::builder("AV_A_Btn_Klingel", "Bell1", Some(KeyEventCab::ACab))
+            a_btn_bell: PushButton::builder("AV_A_Btn_Klingel", "Bell1", Some(CockpitSide::A))
                 .snd_press("Snd_A_BtnDn")
                 .snd_release("Snd_A_BtnUp")
                 .build(),
-            b_btn_bell: PushButton::builder("AV_B_Btn_Klingel", "Bell1", Some(KeyEventCab::BCab))
+            b_btn_bell: PushButton::builder("AV_B_Btn_Klingel", "Bell1", Some(CockpitSide::B))
                 .snd_press("Snd_B_BtnDn")
                 .snd_release("Snd_B_BtnUp")
                 .build(),

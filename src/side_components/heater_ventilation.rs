@@ -1,6 +1,7 @@
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::time::delta;
 use pandemist_vehicle_elements::{
-    api::{key_event::KeyEventCab, sound::Sound},
+    api::sound::Sound,
     elements::tech::{
         buttons::PushButton,
         switches::{StepSwitch, Switch, SwitchEventAction},
@@ -34,42 +35,36 @@ impl HeatingVentilation {
         Self {
             mms_fault_sender: DiagnosticMessageSender::default(),
 
-            a_sw_heater_passenger: Switch::builder("AV_A_Sw_Heizung_FGR", Some(KeyEventCab::ACab))
+            a_sw_heater_passenger: Switch::builder("AV_A_Sw_Heizung_FGR", Some(CockpitSide::A))
                 .event_toggle("Heizung_FGR")
                 .snd_toggle("Snd_A_Switch")
                 .build(),
 
-            a_sw_heater_driver: Switch::builder("AV_A_Sw_Heizung_FRR", Some(KeyEventCab::ACab))
+            a_sw_heater_driver: Switch::builder("AV_A_Sw_Heizung_FRR", Some(CockpitSide::A))
                 .event_toggle("Heizung_Fahrerstand")
                 .snd_toggle("Snd_A_Switch")
                 .build(),
 
-            a_sw_parking_heater: StepSwitch::builder(
-                "AV_A_Sw_Standheizung",
-                Some(KeyEventCab::ACab),
-            )
-            .event("Standheizung_Plus", SwitchEventAction::Plus)
-            .event("Standheizung_Minus", SwitchEventAction::Minus)
-            .snd_default_plus("Snd_A_Switch")
-            .snd_default_minus("Snd_A_Switch")
-            .max(2)
-            .build(),
+            a_sw_parking_heater: StepSwitch::builder("AV_A_Sw_Standheizung", Some(CockpitSide::A))
+                .event("Standheizung_Plus", SwitchEventAction::Plus)
+                .event("Standheizung_Minus", SwitchEventAction::Minus)
+                .snd_default_plus("Snd_A_Switch")
+                .snd_default_minus("Snd_A_Switch")
+                .max(2)
+                .build(),
 
-            a_sw_driver_seat_heater: Switch::builder(
-                "AV_A_Sw_Sitzheizung",
-                Some(KeyEventCab::ACab),
-            )
-            .event_toggle("Sitzheizung")
-            .snd_toggle("Snd_A_Switch")
-            .build(),
-            a_sw_mirror_heater: Switch::builder("AV_A_Sw_Spiegelheizung", Some(KeyEventCab::ACab))
+            a_sw_driver_seat_heater: Switch::builder("AV_A_Sw_Sitzheizung", Some(CockpitSide::A))
+                .event_toggle("Sitzheizung")
+                .snd_toggle("Snd_A_Switch")
+                .build(),
+            a_sw_mirror_heater: Switch::builder("AV_A_Sw_Spiegelheizung", Some(CockpitSide::A))
                 .event_toggle("Spiegelheizung")
                 .snd_toggle("Snd_A_Switch")
                 .build(),
             a_btn_window_heater: PushButton::builder(
                 "AV_A_Btn_Scheibenheizung",
                 "FrontWindowHeaterToggle",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -145,25 +140,25 @@ impl HeatingVentilation {
         self.mms_fault_sender.send(
             DiagnosticFaultKind::Warmhaltebetrieb,
             self.a_sw_parking_heater.value(true) > 0,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::FahrgastraumheizungAus,
             self.a_sw_heater_passenger.value(true),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::FahrerraumheizungAus,
             self.a_sw_heater_driver.value(true),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::ScheibenheizungA,
             self.a_window_heater_timer > 0.0,
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
     }
 }

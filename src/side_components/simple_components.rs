@@ -1,11 +1,10 @@
-use lotus_extra::messages::pis::RoutingDirection;
+use lotus_extra::{messages::pis::RoutingDirection, vehicle::CockpitSide};
 use lotus_script::{
     prelude::{send_message, Message, MessageTarget},
     time::delta,
 };
 use pandemist_vehicle_elements::{
     api::{
-        key_event::KeyEventCab,
         light::Light,
         variable::{get_var, set_var},
     },
@@ -61,22 +60,22 @@ impl SimpleComponents {
 
             a_sw_wheel_lubrication: Switch::builder(
                 "AV_A_Sw_Spurkranzschmierung",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_toggle("Snd_A_Switch")
             .event_toggle("Spurkranzschmierung")
             .build(),
 
-            a_sw_ohne_name: Switch::builder("AV_A_Sw_ohneName", Some(KeyEventCab::ACab))
+            a_sw_ohne_name: Switch::builder("AV_A_Sw_ohneName", Some(CockpitSide::A))
                 .snd_toggle("Snd_A_Switch")
                 .event_toggle("NoNameSwitch")
                 .build(),
 
             a_sw_bypass_switch_kwr_plombe: SealedSwitch::new(
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
                 "vis_A_Plombe_Hilfsschalter_KWR",
                 "Plombe_Hilfsschalter_KWR",
-                Switch::builder("AV_A_sw_bypass_switch_KWR", Some(KeyEventCab::ACab))
+                Switch::builder("AV_A_sw_bypass_switch_KWR", Some(CockpitSide::A))
                     .snd_toggle("Snd_A_Switch")
                     .event_toggle("Hilfsschalter_KWR")
                     .build(),
@@ -86,7 +85,7 @@ impl SimpleComponents {
                 working_key,
                 "AV_A_Key_Werkstatt",
                 "vis_A_Key_Werkstatt",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event_toggle("Key_Werkstatt_Toggle")
             .event_turn("Key_Werkstatt_Turn")
@@ -100,17 +99,17 @@ impl SimpleComponents {
             a_btn_notstart: PushButton::builder(
                 "AV_A_Btn_Notstart",
                 "Notstart",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
             .build(),
-            a_sw_wasch_run: Switch::builder("AV_A_Sw_Waschfahrt", Some(KeyEventCab::ACab))
+            a_sw_wasch_run: Switch::builder("AV_A_Sw_Waschfahrt", Some(CockpitSide::A))
                 .snd_toggle("Snd_A_Switch")
                 .event_toggle("Waschfahrt_Toggle")
                 .build(),
 
-            a_sw_loudspeaker: StepSwitch::builder("AV_A_Sw_Lautsprecher", Some(KeyEventCab::ACab))
+            a_sw_loudspeaker: StepSwitch::builder("AV_A_Sw_Lautsprecher", Some(CockpitSide::A))
                 .event("Lautsprecher_Plus", SwitchEventAction::Plus)
                 .event("Lautsprecher_Minus", SwitchEventAction::Minus)
                 .snd_default_plus("Snd_A_Switch")
@@ -124,7 +123,7 @@ impl SimpleComponents {
             a_sw_switching_control: HandPin::builder(
                 "AV_A_Sw_Weichenpin_X",
                 "AV_A_Sw_Weichenpin_Y",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .mouse_factor(0.15)
             .event_grab("Weichenschalter")
@@ -258,7 +257,7 @@ impl SimpleComponents {
                 && com.fuse.is_on("IKEaufruesten")
                 && com.fuse.is_on("KWRsifaEingangssingal")
                 && past_date_750v()),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
@@ -267,50 +266,50 @@ impl SimpleComponents {
                 && com.fuse.is_on("IKEaufruesten")
                 && com.fuse.is_on("KWRsifaEingangssingal"))
                 && past_date_750v(),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::Sicherungskreis4cA,
             !(com.fuse.is_on("FunkIMUVersorgung")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::Sicherungskreis4dA,
             !(com.fuse.is_on("Notruf")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         // Sicherungskreis 7
         self.mms_fault_sender.send(
             DiagnosticFaultKind::Sicherungskreis7aA,
             !(com.fuse.is_on("Frontscheibenheizung") && com.fuse.is_on("Spurkranzschmierung")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::Sicherungskreis7bA,
             !(com.fuse.is_on("SeitenscheibenheizungSteuerung")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::Sicherungskreis7cA,
             !(com.fuse.is_on("Sandrohrheizung")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::Sicherungskreis8aA,
             !(com.fuse.is_on("VersorgungTuer1") && com.fuse.is_on("SteuerungTuer1")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
 
         self.mms_fault_sender.send(
             DiagnosticFaultKind::Sicherungskreis8bA,
             !(com.fuse.is_on("ZentraleTuersteuerung")),
-            Some(KeyEventCab::ACab),
+            Some(CockpitSide::A),
         );
     }
 

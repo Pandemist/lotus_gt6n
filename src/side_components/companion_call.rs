@@ -1,6 +1,7 @@
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::prelude::Message;
 use pandemist_vehicle_elements::{
-    api::{key_event::KeyEventCab, light::Light, sound::Sound},
+    api::{light::Light, sound::Sound},
     elements::tech::buttons::PushButton,
     management::{communicator::Com, enums::state_enums::ChangedState},
     messages::{
@@ -31,7 +32,7 @@ impl CompanionCall {
             a_btn_shunting_signal: PushButton::builder(
                 "AV_A_Btn_Rangiersignal",
                 "Rangiersignal",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .snd_press("Snd_A_BtnDn")
             .snd_release("Snd_A_BtnUp")
@@ -40,7 +41,7 @@ impl CompanionCall {
             b_btn_shunting_signal: PushButton::builder(
                 "AV_B_Btn_Rangiersignal",
                 "Rangiersignal",
-                Some(KeyEventCab::BCab),
+                Some(CockpitSide::B),
             )
             .snd_press("Snd_B_BtnDn")
             .snd_release("Snd_B_BtnUp")

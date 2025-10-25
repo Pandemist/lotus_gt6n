@@ -1,8 +1,9 @@
 use std::f32::consts::PI;
 
+use lotus_extra::{rand::gen_f32, vehicle::CockpitSide};
 use lotus_script::time::delta;
 use pandemist_vehicle_elements::{
-    api::{key_event::KeyEventCab, vehicle_infos::a_ground},
+    api::vehicle_infos::a_ground,
     components::{
         general::{
             cabin_door::HandDoorWithLever,
@@ -11,12 +12,9 @@ use pandemist_vehicle_elements::{
         },
         gt6n::extra::Slider3d,
     },
-    elements::{
-        std::helper::gen_f32,
-        tech::{
-            key_switch::{KeyDepot, KeySwitch},
-            slider::{Rollo, Slider},
-        },
+    elements::tech::{
+        key_switch::{KeyDepot, KeySwitch},
+        slider::{Rollo, Slider},
     },
     management::communicator::Com,
 };
@@ -76,7 +74,7 @@ impl Moveables {
                 "Fahrerraumtuer_B",
                 "Fahrerraumtuer_Klinke",
                 "_",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .friction(0.01)
             .mouse_factor(1.0 / 550.0)
@@ -87,7 +85,7 @@ impl Moveables {
                 driver_key.clone(),
                 "AV_A_Fahrerraumtuer_Schluessel",
                 "vis_A_Key_Fahrertuer",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event_turn("Key_Fahrerraumtuer")
             .event_toggle("Key_Fahrerraumtuer_Insert")
@@ -101,7 +99,7 @@ impl Moveables {
             sliding_window_r: SlidingWindow::builder(
                 "AV_A_Schiebefenster_R",
                 "Schiebefenster_R",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .axis_x()
             .mouse_factor(1.0 / 350.0)
@@ -109,36 +107,36 @@ impl Moveables {
             sliding_window_l: SlidingWindow::builder(
                 "AV_A_Schiebefenster_L",
                 "Schiebefenster_L",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .axis_x()
             .mouse_factor(-1.0 / 350.0)
             .build(),
-            rollo: Rollo::builder("AV_A_Rollo", "Rollo", Some(KeyEventCab::ACab))
+            rollo: Rollo::builder("AV_A_Rollo", "Rollo", Some(CockpitSide::A))
                 .mouse_factor(1.0 / 1000.0)
                 .build(),
-            rollo_r: Rollo::builder("AV_A_Rollo_R", "Rollo_R", Some(KeyEventCab::ACab))
+            rollo_r: Rollo::builder("AV_A_Rollo_R", "Rollo_R", Some(CockpitSide::A))
                 .mouse_factor(1.0 / 1000.0)
                 .build(),
-            rollo_l: Rollo::builder("AV_A_Rollo_L", "Rollo_L", Some(KeyEventCab::ACab))
+            rollo_l: Rollo::builder("AV_A_Rollo_L", "Rollo_L", Some(CockpitSide::A))
                 .mouse_factor(1.0 / 1000.0)
                 .build(),
             radio_volume: Slider::builder()
                 .animation("AV_A_Funklautstaerke")
-                .key_event("Funklautstaerke", Some(KeyEventCab::ACab))
+                .key_event("Funklautstaerke", Some(CockpitSide::A))
                 .axis_x()
                 .mouse_factor(1.0 / 550.0)
                 .only_while_grab()
                 .build(),
             cabin_ventilation: Slider::builder()
                 .animation("AV_A_Belueftung")
-                .key_event("Belueftungsknauf", Some(KeyEventCab::ACab))
+                .key_event("Belueftungsknauf", Some(CockpitSide::A))
                 .axis_x()
                 .mouse_factor(1.0 / 200.0)
                 .only_while_grab()
                 .build(),
             microphone: Slider3d::new(
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
                 "Mikro",
                 "Mirko_Pull",
                 01.0 / 450.0,
@@ -149,7 +147,7 @@ impl Moveables {
             // Schiebetisch
             sliding_pdedestal: Slider::builder()
                 .animation("AV_A_Schiebetisch")
-                .key_event("Schiebepodest", Some(KeyEventCab::ACab))
+                .key_event("Schiebepodest", Some(CockpitSide::A))
                 .axis_x()
                 .mouse_factor(-1.0 / 300.0)
                 .only_while_grab()
@@ -157,7 +155,7 @@ impl Moveables {
             // Heck Fahrerstand
             b_cover_flap: Slider::builder()
                 .animation("AV_B_Pult_Klappe")
-                .key_event("PultKlappe", Some(KeyEventCab::BCab))
+                .key_event("PultKlappe", Some(CockpitSide::B))
                 .axis_y()
                 .friction(10.0)
                 .mouse_factor(-1.0 / 5.0)

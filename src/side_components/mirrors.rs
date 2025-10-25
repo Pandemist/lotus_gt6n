@@ -1,7 +1,7 @@
+use lotus_extra::vehicle::CockpitSide;
 use lotus_script::math::Vec2;
 use pandemist_vehicle_elements::{
     api::{
-        key_event::KeyEventCab,
         mock_enums::VehicleInitState,
         simulation_settings::{init_pos_in_train, init_ready_state},
     },
@@ -23,7 +23,7 @@ impl Mirrors {
             a_sw_mirror_adjustments: HandPin::builder(
                 "AV_A_Sw_SpiegelPin_X",
                 "AV_A_Sw_SpiegelPin_Y",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event_grab("SpiegelPin")
             .mouse_factor(0.25)
@@ -32,7 +32,7 @@ impl Mirrors {
             a_mirror_right: OutsideMirror::builder(
                 "AV_A_Spiegel_x",
                 "AV_A_Spiegel_y",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .add_mirror_arm("AV_A_Spiegelarm")
             .keyevent_arm("MirrorRight")

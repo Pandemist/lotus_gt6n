@@ -1,8 +1,9 @@
 use std::collections::HashMap;
 
-use lotus_extra::messages::{
-    std::PowerSignalCabin,
-    std_helper::{PowerSignalSender, VelocitySender},
+use lotus_extra::{
+    math::PiecewiseLinearFunction,
+    messages::std::{PowerSignalCabin, PowerSignalSender, VelocitySender},
+    vehicle::CockpitSide,
 };
 use lotus_script::{
     prelude::{Message, MessageTarget},
@@ -11,7 +12,6 @@ use lotus_script::{
 use pandemist_vehicle_elements::{
     api::{
         axis::ApiRailAxis,
-        key_event::KeyEventCab,
         mock_enums::VehicleInitState,
         simulation_settings::{init_car_is_reversed, init_pos_in_train, init_ready_state},
         sound::{Sound, SoundWithVol},
@@ -19,12 +19,9 @@ use pandemist_vehicle_elements::{
     components::traction::{
         continous_throttle_lever::ContinuousThrottleLever, speedometer::Speedometer,
     },
-    elements::{
-        std::piecewise_linear_function::PiecewiseLinearFunction,
-        tech::{
-            key_switch::{KeyDepot, KeySwitch},
-            switches::{StepSwitch, SwitchEventAction},
-        },
+    elements::tech::{
+        key_switch::{KeyDepot, KeySwitch},
+        switches::{StepSwitch, SwitchEventAction},
     },
     management::{
         communicator::Com,
@@ -407,7 +404,7 @@ impl TractionControl {
 
             a_throttle_lever: ContinuousThrottleLever::builder(
                 "AV_A_Sollwertgeber",
-                KeyEventCab::ACab,
+                CockpitSide::A,
             )
             .snd_notch_end("Snd_A_Sollwertgeber_End")
             .snd_notch_neutral("Snd_A_Sollwertgeber_NotchNeutral")
@@ -422,7 +419,7 @@ impl TractionControl {
             .add_snappoint_config(7, 2.0)
             .build(),
 
-            a_reverser: StepSwitch::builder("AV_A_Richtungswender", Some(KeyEventCab::ACab))
+            a_reverser: StepSwitch::builder("AV_A_Richtungswender", Some(CockpitSide::A))
                 .event("ReverserPlus", SwitchEventAction::Plus)
                 .event("ReverserMinus", SwitchEventAction::Minus)
                 .snd_default_plus("Snd_A_Reverser")
@@ -436,7 +433,7 @@ impl TractionControl {
                 driver_key.clone(),
                 "AV_A_Key_Betrieb",
                 "vis_A_Key_Betrieb",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event_toggle("InsertKey_Reverser")
             .event_plus("Key_Reverser_R")
@@ -455,7 +452,7 @@ impl TractionControl {
                 driver_key.clone(),
                 "AV_A_Key_Notbetrieb",
                 "vis_A_Key_Notbetrieb",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event_toggle("Key_Notbetrieb_Toggle")
             .event_turn("Key_Notbetrieb_Turn")
@@ -468,7 +465,7 @@ impl TractionControl {
 
             a_sw_fallback_driving_switch: StepSwitch::builder(
                 "AV_A_Sw_Notfahrschater",
-                Some(KeyEventCab::ACab),
+                Some(CockpitSide::A),
             )
             .event("ThrottleLeaverPlus", SwitchEventAction::Plus)
             .event("ThrottleLeaverMinus", SwitchEventAction::Minus)
@@ -488,7 +485,7 @@ impl TractionControl {
                 driver_key.clone(),
                 "AV_B_Key_Betrieb",
                 "vis_B_Key_Betrieb",
-                Some(KeyEventCab::BCab),
+                Some(CockpitSide::B),
             )
             .event_toggle("InsertKey_Reverser")
             .event_plus("Key_Reverser_R")
@@ -503,7 +500,7 @@ impl TractionControl {
             )
             .build(),
 
-            b_sw_driving_switch: StepSwitch::builder("AV_B_Fahrschalter", Some(KeyEventCab::BCab))
+            b_sw_driving_switch: StepSwitch::builder("AV_B_Fahrschalter", Some(CockpitSide::B))
                 .event("ThrottleLeaverPlus", SwitchEventAction::Plus)
                 .event("ThrottleLeaverMinus", SwitchEventAction::Minus)
                 .event("Throttle", SwitchEventAction::Plus)
@@ -622,9 +619,9 @@ impl TractionControl {
         mainswitch_sender.send(
             self.car_activ,
             if a_cab_state > CabActivState::Off {
-                PowerSignalCabin::ACab
+                PowerSignalCabin::A
             } else {
-                PowerSignalCabin::NoCab
+                PowerSignalCabin::No
             },
         );
 
