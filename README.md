@@ -57,5 +57,5 @@ This project is licensed under GNU General Public Licence 3, ([LICENCE] or https
 
 If you have any questions or problems:
 - Create an issue in this repository
-- Report it in the LOTUS forum in the corresponding post [Forum post](https://www.lotus-simulator.de/forum/)
+- Report it in the LOTUS forum in the corresponding post [Forum post](https://www.lotus-simulator.de/forum/index.php?thread/8625-pandemists-ng-scripte/)
 - Report on Discord @Pandemist
