@@ -12,6 +12,7 @@ use pandemist_vehicle_elements::{
             state_enums::ChangedState,
             traction_enums::DirectionOfDriving,
         },
+        structs::general_structs::TrainActivState,
     },
     messages::{
         coupling_handler::UniversalCouplingLine,
@@ -21,8 +22,8 @@ use pandemist_vehicle_elements::{
 
 use crate::general::{
     local_values::{
-        WslBatteryMainSwitch, WslCabIndicatorBrightness, WslCabState, WslDirectionOfDriving,
-        WslLighttest, WslLowVoltageNorm,
+        WslBatteryMainSwitch, WslCabIndicatorBrightness, WslDirectionOfDriving, WslLighttest,
+        WslLowVoltageNorm, WslTrainState,
     },
     setup::{const_veh_variant, FahrzeugVariante},
 };
@@ -264,10 +265,13 @@ impl StopRequest {
             com.lv.get_or(WslBatteryMainSwitch, ChangedState::default()) >= ChangedState::JustOn;
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
         let released = door_target > DoorTarget::Close;
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
         //let cab_a_runmode =
-        //    com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Star;
+        //    com.lv.get_or(WslTrainState, TrainActivState::default()).cab_a > CabActivState::Star;
         let light_test = com.lv.get_or(WslLighttest(0), false);
         let cab_indicator_light_level = com.lv.get_or(WslCabIndicatorBrightness(0), 1.0);
         let direction_of_driving = com

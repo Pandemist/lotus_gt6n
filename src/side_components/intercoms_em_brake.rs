@@ -14,16 +14,18 @@ use pandemist_vehicle_elements::{
             general_enums::{CabActivState, TrainFormationSwitch},
             state_enums::ChangedState,
         },
+        structs::general_structs::TrainActivState,
     },
     messages::{
+        coupling_handler::UniversalCouplingLine,
         diagnostic_messages::{DiagnosticFaultKind, DiagnosticMessageSender},
-        {coupling_handler::UniversalCouplingLine, gt6n_coupling_messages::CouplerEmergencyBrake},
+        gt6n_coupling_messages::CouplerEmergencyBrake,
     },
 };
 
 use crate::general::local_values::{
-    WslBatteryMainSwitch, WslCabIndicatorBrightness, WslCabOffButStillThere, WslCabState,
-    WslEmergencyBrakes, WslLighttest, WslLowVoltageNorm, WslTrainFormationSwitch,
+    WslBatteryMainSwitch, WslCabIndicatorBrightness, WslCabOffButStillThere, WslEmergencyBrakes,
+    WslLighttest, WslLowVoltageNorm, WslTrainFormationSwitch, WslTrainState,
 };
 
 pub struct IntercomsEmBrake {
@@ -162,8 +164,11 @@ impl IntercomsEmBrake {
         let battery_switch =
             com.lv.get_or(WslBatteryMainSwitch, ChangedState::default()) >= ChangedState::JustOn;
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
         let light_test = com.lv.get_or(WslLighttest(0), false);
         let cab_indicator_light_level = com.lv.get_or(WslCabIndicatorBrightness(0), 1.0);
         let cab_shutoff_flag = com.lv.get_or(WslCabOffButStillThere(0), false);

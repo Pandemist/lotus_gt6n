@@ -21,6 +21,7 @@ use pandemist_vehicle_elements::{
             general_enums::{CabActivState, TrainFormationSwitch},
             state_enums::ChangedState,
         },
+        structs::general_structs::TrainActivState,
     },
     messages::{
         coupling_handler::UniversalCouplingLine,
@@ -33,9 +34,9 @@ use pandemist_vehicle_elements::{
 
 use crate::general::{
     local_values::{
-        WslBatteryMainSwitch, WslCabIndicatorBrightness, WslCabOffButStillThere, WslCabState,
-        WslDoorsClosed, WslEnergencyLight, WslInteriorLight, WslLighttest, WslLowVoltageNorm,
-        WslPermanentVoltageNorm, WslSpeedometerKmh, WslTrainFormationSwitch,
+        WslBatteryMainSwitch, WslCabIndicatorBrightness, WslCabOffButStillThere, WslDoorsClosed,
+        WslEnergencyLight, WslInteriorLight, WslLighttest, WslLowVoltageNorm,
+        WslPermanentVoltageNorm, WslSpeedometerKmh, WslTrainFormationSwitch, WslTrainState,
         WslWheelchairHelperActive,
     },
     setup::{const_veh_variant, FahrzeugVariante},
@@ -348,12 +349,21 @@ impl Doors {
         let battery =
             com.lv.get_or(WslBatteryMainSwitch, ChangedState::default()) >= ChangedState::JustOn;
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
-        let cab_a_runmode =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Star;
-        let cab_b_activ =
-            com.lv.get_or(WslCabState(1), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
+        let cab_a_runmode = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Star;
+        let cab_b_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_b
+            > CabActivState::Off;
         let train_formation_switch = com
             .lv
             .get_or(WslTrainFormationSwitch(0), TrainFormationSwitch::Leading);
@@ -747,10 +757,16 @@ impl Doors {
         // Read local signals
         let battery =
             com.lv.get_or(WslBatteryMainSwitch, ChangedState::default()) >= ChangedState::JustOn;
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
-        let cab_b_activ =
-            com.lv.get_or(WslCabState(1), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
+        let cab_b_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_b
+            > CabActivState::Off;
         let km_h = com.lv.get_or(WslSpeedometerKmh, 0.0);
         let train_formation_switch = com
             .lv

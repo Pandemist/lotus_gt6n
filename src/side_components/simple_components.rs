@@ -19,14 +19,15 @@ use pandemist_vehicle_elements::{
     management::{
         communicator::Com,
         enums::{general_enums::CabActivState, state_enums::ChangedState},
+        structs::general_structs::TrainActivState,
     },
     messages::diagnostic_messages::{DiagnosticFaultKind, DiagnosticMessageSender},
 };
 
 use crate::general::{
     local_values::{
-        WslBatteryMainSwitch, WslCabIndicatorBrightness, WslCabState, WslLighttest,
-        WslLowVoltageNorm, WslWorkshopKey,
+        WslBatteryMainSwitch, WslCabIndicatorBrightness, WslLighttest, WslLowVoltageNorm,
+        WslTrainState, WslWorkshopKey,
     },
     setup::past_date_750v,
 };
@@ -151,8 +152,11 @@ impl SimpleComponents {
         // Read local signals
         let battery_switch =
             com.lv.get_or(WslBatteryMainSwitch, ChangedState::default()) >= ChangedState::JustOn;
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
         let light_test = com.lv.get_or(WslLighttest(0), false);
         let cab_indicator_light_level = com.lv.get_or(WslCabIndicatorBrightness(0), 1.0);

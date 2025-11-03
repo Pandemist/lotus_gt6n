@@ -30,6 +30,7 @@ use pandemist_vehicle_elements::{
             state_enums::ChangedState,
             traction_enums::DirectionOfDriving,
         },
+        structs::general_structs::TrainActivState,
     },
     messages::{
         coupling_handler::UniversalCouplingLine,
@@ -42,9 +43,10 @@ use pandemist_vehicle_elements::{
 
 use crate::general::{
     local_values::{
-        WslBatteryMainSwitch, WslBrakelight, WslCabState, WslDirectionOfDriving, WslDoorsClosed,
+        WslBatteryMainSwitch, WslBrakelight, WslDirectionOfDriving, WslDoorsClosed,
         WslElectricCoupled, WslEmergencyBrakes, WslFlapBlocked, WslSpeedometerKmh,
-        WslTractionTarget, WslTractionVoltageNorm, WslTrainFormationSwitch, WslWorkshopKey,
+        WslTractionTarget, WslTractionVoltageNorm, WslTrainFormationSwitch, WslTrainState,
+        WslWorkshopKey,
     },
     setup::{const_veh_variant, FahrzeugVariante},
 };
@@ -128,10 +130,16 @@ impl Traction {
         // Read local signals
         let battery =
             com.lv.get_or(WslBatteryMainSwitch, ChangedState::default()) >= ChangedState::JustOn;
-        let cab_a_runmode =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Star;
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_runmode = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Star;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
         let emergency_brake = com.lv.get_or(WslEmergencyBrakes, false);
         let workshop_key = com.lv.get_or(WslWorkshopKey(0), false);
 
@@ -598,13 +606,11 @@ impl TractionControl {
             1 => CabActivState::Star,
             _ => CabActivState::Off,
         };
-        com.lv.set(WslCabState(0), a_cab_state);
 
         let b_cab_state = match self.b_ignition_key.value(true) {
             1 => CabActivState::VR,
             _ => CabActivState::Off,
         };
-        com.lv.set(WslCabState(1), b_cab_state);
 
         // Hilfsfahrerstand aufgerüstet zählt nicht als Aufgerüstet
         self.car_activ_coupling.update_permit(
@@ -615,6 +621,20 @@ impl TractionControl {
         self.car_activ_coupling
             .update_local(a_cab_state > CabActivState::Off);
         self.car_activ = self.car_activ_coupling.get_value();
+
+        let train_state = if self.car_activ {
+            CabActivState::Star
+        } else {
+            CabActivState::Off
+        };
+
+        let train_state = TrainActivState {
+            cab_a: a_cab_state,
+            cab_b: b_cab_state,
+            train: train_state,
+        };
+
+        com.lv.set(WslTrainState, train_state);
 
         mainswitch_sender.send(
             self.car_activ,
@@ -635,12 +655,21 @@ impl TractionControl {
 
     fn control_target(&mut self, sifa: &mut Sifa, com: &mut Com) {
         // Read local signals
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
-        let cab_a_runmode =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Star;
-        let cab_b_activ =
-            com.lv.get_or(WslCabState(1), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
+        let cab_a_runmode = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Star;
+        let cab_b_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_b
+            > CabActivState::Off;
         let e_coupler_rear = com.lv.get_or(WslElectricCoupled(1), false);
         let doors_closed = com.lv.get_or(WslDoorsClosed, false);
         let traction_voltage = com.lv.get_or(WslTractionVoltageNorm, 0.0) > 0.8;

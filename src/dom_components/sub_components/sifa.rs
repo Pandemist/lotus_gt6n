@@ -3,12 +3,15 @@ use lotus_script::time::delta;
 use pandemist_vehicle_elements::{
     api::{light::Light, simulation_settings::deadmans_switch, sound::Sound},
     elements::tech::{buttons::PushButton, seals::SealedSwitch, switches::Switch},
-    management::{communicator::Com, enums::general_enums::CabActivState},
+    management::{
+        communicator::Com, enums::general_enums::CabActivState,
+        structs::general_structs::TrainActivState,
+    },
     messages::diagnostic_messages::{DiagnosticFaultKind, DiagnosticMessageSender},
 };
 
 use crate::general::local_values::{
-    WslCabIndicatorBrightness, WslCabState, WslLighttest, WslLowVoltageNorm, WslSpeedometerKmh,
+    WslCabIndicatorBrightness, WslLighttest, WslLowVoltageNorm, WslSpeedometerKmh, WslTrainState,
 };
 
 const SIFA_TIME_S: f32 = 3.0;
@@ -87,8 +90,11 @@ impl Sifa {
     pub fn tick(&mut self, sifa_aktiv: bool, throttle_lever_zeroed: bool, com: &mut Com) {
         // Read local signals
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
         let light_test = com.lv.get_or(WslLighttest(0), false);
         let cab_indicator_light_level = com.lv.get_or(WslCabIndicatorBrightness(0), 1.0);
         let km_h = com.lv.get_or(WslSpeedometerKmh, 0.0);

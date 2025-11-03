@@ -7,10 +7,11 @@ use pandemist_vehicle_elements::{
     management::{
         communicator::Com,
         enums::general_enums::{CabActivState, WiperTarget},
+        structs::general_structs::TrainActivState,
     },
 };
 
-use crate::general::local_values::{WslCabState, WslLowVoltageNorm};
+use crate::general::local_values::{WslLowVoltageNorm, WslTrainState};
 
 pub struct Wipers {
     a_sw_wiper: StepSwitch,
@@ -85,10 +86,16 @@ impl Wipers {
     pub fn tick(&mut self, com: &mut Com) {
         // Read local signals
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
-        let cab_b_activ =
-            com.lv.get_or(WslCabState(1), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
+        let cab_b_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_b
+            > CabActivState::Off;
 
         // Input from key events
         self.a_sw_wiper.tick();

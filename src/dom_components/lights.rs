@@ -18,6 +18,7 @@ use pandemist_vehicle_elements::{
             state_enums::ChangedState,
             traction_enums::DirectionOfDriving,
         },
+        structs::general_structs::TrainActivState,
     },
     messages::{
         coupling_handler::UniversalCouplingLine,
@@ -28,9 +29,9 @@ use pandemist_vehicle_elements::{
 
 use crate::general::{
     local_values::{
-        WslBatteryMainSwitch, WslBrakelight, WslCabIndicatorBrightness, WslCabState,
-        WslConverterVoltageNorm, WslDirectionOfDriving, WslEnergencyLight, WslInteriorLight,
-        WslLighttest, WslLowVoltageNorm, WslPermanentVoltageNorm, WslTrainFormationSwitch,
+        WslBatteryMainSwitch, WslBrakelight, WslCabIndicatorBrightness, WslConverterVoltageNorm,
+        WslDirectionOfDriving, WslEnergencyLight, WslInteriorLight, WslLighttest,
+        WslLowVoltageNorm, WslPermanentVoltageNorm, WslTrainFormationSwitch, WslTrainState,
         WslWheelchairHelperActive,
     },
     setup::{const_veh_variant, FahrzeugVariante},
@@ -303,8 +304,11 @@ impl Lights {
             com.lv.get_or(WslBatteryMainSwitch, ChangedState::default()) >= ChangedState::JustOn;
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
 
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
 
         // Input from key events
         self.a_sw_dimmer.tick();
@@ -389,10 +393,16 @@ impl Lights {
         // Read local signals
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
 
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
-        let cab_a_runmode =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Star;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
+        let cab_a_runmode = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Star;
 
         let b_brake_light = com.lv.get_or(WslBrakelight(1), false);
         let direction_of_driving = com
@@ -643,8 +653,11 @@ impl Lights {
             .lv
             .get_or(WslDirectionOfDriving, DirectionOfDriving::default());
 
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
 
         let train_formation_switch = com
             .lv

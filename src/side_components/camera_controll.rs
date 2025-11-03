@@ -5,10 +5,13 @@ use pandemist_vehicle_elements::{
         buttons::PushButton,
         switches::{StepSwitch, SwitchEventAction},
     },
-    management::{communicator::Com, enums::general_enums::CabActivState},
+    management::{
+        communicator::Com, enums::general_enums::CabActivState,
+        structs::general_structs::TrainActivState,
+    },
 };
 
-use crate::general::local_values::{WslCabState, WslLowVoltageNorm};
+use crate::general::local_values::{WslLowVoltageNorm, WslTrainState};
 
 pub struct CameraControll {
     a_sw_brightness: StepSwitch,
@@ -60,8 +63,11 @@ impl CameraControll {
     pub fn tick(&mut self, com: &mut Com) {
         // Read local signals
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
 
         // Read fuses
 

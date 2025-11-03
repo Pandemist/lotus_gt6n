@@ -6,6 +6,7 @@ use pandemist_vehicle_elements::{
     management::{
         communicator::Com,
         enums::general_enums::{CabActivState, TrainFormationSwitch},
+        structs::general_structs::TrainActivState,
         trainbus::EcouplerSender,
     },
     messages::{
@@ -14,7 +15,7 @@ use pandemist_vehicle_elements::{
     },
 };
 
-use crate::general::local_values::{WslCabState, WslElectricCoupled, WslTrainFormationSwitch};
+use crate::general::local_values::{WslElectricCoupled, WslTrainFormationSwitch, WslTrainState};
 
 pub struct VehicleCoupling {
     mms_fault_sender: DiagnosticMessageSender,
@@ -60,8 +61,11 @@ impl VehicleCoupling {
 
     pub fn tick(&mut self, com: &mut Com) {
         // Read local signals
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
 
         // Read fuses
 

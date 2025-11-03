@@ -15,6 +15,7 @@ use pandemist_vehicle_elements::{
             general_enums::{CabActivState, TrainFormationSwitch},
             traction_enums::DirectionOfDriving,
         },
+        structs::general_structs::TrainActivState,
     },
     messages::{
         coupling_handler::UniversalCouplingLine,
@@ -26,9 +27,9 @@ use pandemist_vehicle_elements::{
 use crate::{
     dom_components::sub_components::anti_slide_anti_skid::AntiSlipAntiSlideProtectionUnit,
     general::local_values::{
-        WslCabIndicatorBrightness, WslCabState, WslDirectionOfDriving, WslEmergencyBrakes,
-        WslLighttest, WslLowVoltageNorm, WslSpeedometerKmh, WslTractionVoltageNorm,
-        WslTrainFormationSwitch,
+        WslCabIndicatorBrightness, WslDirectionOfDriving, WslEmergencyBrakes, WslLighttest,
+        WslLowVoltageNorm, WslSpeedometerKmh, WslTractionVoltageNorm, WslTrainFormationSwitch,
+        WslTrainState,
     },
 };
 
@@ -135,8 +136,11 @@ impl Bogie {
     ) {
         // Read local signals
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
         let light_test = com.lv.get_or(WslLighttest(0), false);
         let cab_indicator_light_level = com.lv.get_or(WslCabIndicatorBrightness(0), 1.0);
         let v_kmh = com.lv.get_or(WslSpeedometerKmh, 0.0);
@@ -322,12 +326,15 @@ impl SpringBrake {
     ) -> bool {
         // Read local signals
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
-        let cab_a_runmode =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Star;
+        let cab_a_runmode = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Star;
         //let cab_a_activ =
-        //    com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        //    com.lv.get_or(WslTrainState, TrainActivState::default()).cab_a > CabActivState::Off;
         //let cab_b_activ =
-        //    com.lv.get_or(WslCabState(1), CabActivState::default()) > CabActivState::Off;
+        //    com.lv.get_or(WslTrainState, TrainActivState::default()).cab_b > CabActivState::Off;
         let light_test = com.lv.get_or(WslLighttest(0), false);
         let train_formation_switch = com
             .lv

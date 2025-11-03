@@ -6,14 +6,14 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+lotus-extra = "0.2"
+lotus-script = { version = "0.7", features = ["time"] }
 #lotus-extra = { git = "https://github.com/Oriolus-Software/lotus-extra.git" }
 #lotus-script = { git = "https://github.com/Oriolus-Software/LOTUS-Scripting.git", features = [
 #	"time",
 #] }
-#pandemist_vehicle_elements = { git = "https://github.com/Pandemist/PandemistVehicleElements.git" }
-lotus-script = { version = "0.7.0", features = ["time"] }
-lotus-extra = "0.2.0"
-pandemist_vehicle_elements = "0.1.0"
+pandemist_vehicle_elements = { path = "../pandemist_vehicle_elements" }
+#pandemist_vehicle_elements = "0.1.0"
 time = "0.3"
 typedmap = "0.6.0"
 

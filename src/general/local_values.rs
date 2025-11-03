@@ -1,7 +1,9 @@
-use pandemist_vehicle_elements::management::enums::{
-    general_enums::{CabActivState, TrainFormationSwitch},
-    state_enums::ChangedState,
-    traction_enums::DirectionOfDriving,
+use pandemist_vehicle_elements::management::{
+    enums::{
+        general_enums::TrainFormationSwitch, state_enums::ChangedState,
+        traction_enums::DirectionOfDriving,
+    },
+    structs::general_structs::TrainActivState,
 };
 use typedmap::TypedMapKey;
 
@@ -231,17 +233,17 @@ impl TypedMapKey for WslSandSwitchTarget {
 }
 
 //==========================================================================
-// Driver's cab status
+// Driver's cab status (full Train)
 //==========================================================================
 
-/// Represents the activation state of a driver's cab.
+/// Represents the activation state of a driver's cab in all cars.
 ///
 /// The `usize` parameter identifies the specific cab instance.
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Hash)]
-pub struct WslCabState(pub usize);
+pub struct WslTrainState;
 
-impl TypedMapKey for WslCabState {
-    type Value = CabActivState;
+impl TypedMapKey for WslTrainState {
+    type Value = TrainActivState;
 }
 
 /// Indicates whether the driver's cab has been dismantled but the driver has not yet left it (door 1 activated).

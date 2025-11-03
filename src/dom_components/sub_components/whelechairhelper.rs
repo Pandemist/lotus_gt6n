@@ -6,12 +6,15 @@ use pandemist_vehicle_elements::{
         buttons::PushButton,
         switches::{StepSwitch, SwitchEventAction},
     },
-    management::{communicator::Com, enums::general_enums::CabActivState},
+    management::{
+        communicator::Com, enums::general_enums::CabActivState,
+        structs::general_structs::TrainActivState,
+    },
     messages::diagnostic_messages::{DiagnosticFaultKind, DiagnosticMessageSender},
 };
 
 use crate::general::{
-    local_values::{WslCabState, WslLighttest, WslLowVoltageNorm},
+    local_values::{WslLighttest, WslLowVoltageNorm, WslTrainState},
     setup::{const_veh_variant, FahrzeugVariante},
 };
 
@@ -80,7 +83,7 @@ pub struct WheelchairRampGt6n {
 impl WheelchairRampGt6n {
     fn new() -> Self {
         Self {
-            rampe: Foldingramp::new("", CockpitSide::A),
+            rampe: Foldingramp::new(CockpitSide::A),
         }
     }
 
@@ -162,8 +165,11 @@ impl WheelchairLiftGt6n {
         // Read local signals
         let voltage = com.lv.get_or(WslLowVoltageNorm, 0.0);
         let light_test = com.lv.get_or(WslLighttest(0), false);
-        let cab_a_runmode =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Star;
+        let cab_a_runmode = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Star;
 
         // Read fuses
         let fuse_power = com.fuse.is_on("HubliftLeistungsteil");

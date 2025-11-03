@@ -29,20 +29,22 @@ use pandemist_vehicle_elements::{
             state_enums::{ChangedState, SwitchingState},
             target_enums::SwitchingTarget,
         },
+        structs::general_structs::TrainActivState,
     },
     messages::{
+        coupling_handler::UniversalCouplingLine,
         diagnostic_messages::{
             DiagnosticFaultKind, DiagnosticMessageSender, DiagnosticPantoStateSender,
         },
-        {coupling_handler::UniversalCouplingLine, gt6n_coupling_messages::CouplerPowerlinePower},
+        gt6n_coupling_messages::CouplerPowerlinePower,
     },
 };
 
 use crate::general::{
     local_values::{
-        WslBatteryMainSwitch, WslCabIndicatorBrightness, WslCabState, WslConverterVoltageNorm,
+        WslBatteryMainSwitch, WslCabIndicatorBrightness, WslConverterVoltageNorm,
         WslElectricCoupled, WslLighttest, WslLowVoltageNorm, WslPermanentVoltageNorm,
-        WslTractionVoltageNorm, WslTrainFormationSwitch,
+        WslTractionVoltageNorm, WslTrainFormationSwitch, WslTrainState,
     },
     setup::{const_veh_variant, FahrzeugVariante},
 };
@@ -224,8 +226,11 @@ impl Electric {
 
     pub fn tick(&mut self, com: &mut Com) {
         // Read local signals
-        let cab_a_activ =
-            com.lv.get_or(WslCabState(0), CabActivState::default()) > CabActivState::Off;
+        let cab_a_activ = com
+            .lv
+            .get_or(WslTrainState, TrainActivState::default())
+            .cab_a
+            > CabActivState::Off;
         let light_test = com.lv.get_or(WslLighttest(0), false);
         let cab_indicator_light_level = com.lv.get_or(WslCabIndicatorBrightness(0), 1.0);
         let el_coupler_front = com.lv.get_or(WslElectricCoupled(0), false);
