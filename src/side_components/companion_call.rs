@@ -91,7 +91,9 @@ impl CompanionCall {
         }
     }
 
-    pub fn on_message(&mut self, _msg: Message) {}
+    pub fn on_message(&mut self, msg: Message) {
+        self.call_coupling.on_message(msg);
+    }
 }
 
 impl Default for CompanionCall {

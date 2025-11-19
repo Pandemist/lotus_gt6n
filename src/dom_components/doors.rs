@@ -1013,15 +1013,15 @@ impl DoorLight {
             || emergency_light
             || battery_off_doorlight_timer > 0.0) as u8 as f32
             * permanent_voltage;
-        let doorlight_2_target = ((*door_states.get(2).unwrap_or(&DoorState::Closed))
+        let doorlight_2_target = ((*door_states.get(1).unwrap_or(&DoorState::Closed))
             != DoorState::Closed
             && interior_light) as u8 as f32
             * voltage;
-        let doorlight_3_target = ((*door_states.get(3).unwrap_or(&DoorState::Closed))
+        let doorlight_3_target = ((*door_states.get(2).unwrap_or(&DoorState::Closed))
             != DoorState::Closed
             && interior_light) as u8 as f32
             * voltage;
-        let doorlight_4_target = ((*door_states.get(4).unwrap_or(&DoorState::Closed))
+        let doorlight_4_target = ((*door_states.get(3).unwrap_or(&DoorState::Closed))
             != DoorState::Closed
             && interior_light) as u8 as f32
             * voltage;
